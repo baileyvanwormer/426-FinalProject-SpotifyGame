@@ -1,0 +1,7 @@
+<div>
+    <label>Please Enter an Artist Name: </label>
+    <input #artistName type="text"/>
+</div>
+<div>
+    <button (click)="setArtistName(artistName.value); generateSong();">Generate Song</button>
+</div>

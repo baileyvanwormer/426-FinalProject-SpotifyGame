@@ -1,0 +1,16 @@
+<div>
+    <h1>Welcome to the Spotify Game!</h1>
+</div>
+<div>
+    <div>
+        <label>Please Enter a Username: </label>
+        <input #username type="text"/>
+    </div>
+    <div class="input">
+        <label>Please Enter a Password: </label>
+        <input #password type="password"/>
+    </div>
+</div>
+<div class="submit">
+    <button (click)="handleSubmit(username.value, password.value)">Submit</button>
+</div>

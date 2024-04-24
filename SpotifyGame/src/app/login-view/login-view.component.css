@@ -1,0 +1,20 @@
+h1 {
+    color: #1DB954;
+    text-align: center;
+}
+
+div {
+    text-align: center;
+}
+
+div.submit {
+    padding: 10px;
+}
+
+div.input {
+    padding: 10px;
+}
+
+label {
+    text-align: center;
+}

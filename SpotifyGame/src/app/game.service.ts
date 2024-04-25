@@ -1,5 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -11,12 +13,30 @@ export class GameService {
   private state: string = "login";
   private artistName: string = "Bailey Van Wormer";
 
-  constructor() { }
+  private baseUrl: string = 'https://api.spotify.com/v1';
+  private accessToken: string = ''; // Initially blank, needs to be set after obtaining a token
 
-  public generateSong() {
-    // logic to call previews api and generate song goes here
+  constructor(private http: HttpClient) {}
+
+  // Set access token (update to handle token refresh?)
+  setAccessToken(token: string) {
+    this.accessToken = token;
   }
 
+  public generateSong(artistName: string): Observable<any> {
+    const url = `${this.baseUrl}/artists/${encodeURIComponent(artistName)}/top-tracks?country=US`;
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': `Bearer ${this.accessToken}`
+      })
+    }).pipe(
+      catchError(error => {
+        console.error('Error fetching songs:', error);
+        return throwError(error);
+      })
+    );
+  }
+  
   public getUsername() {
     return this.username;
   }

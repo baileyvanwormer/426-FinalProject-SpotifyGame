@@ -9,13 +9,61 @@ import { GameService } from '../game.service';
 export class GameViewComponent {
 
   private gameState: string = "initial";
+  private userGuess: string = '';
+  private gameOver: boolean = false;
 
   constructor(private service: GameService) {}
 
   public generateSong(artistName: string) {
     // logic to call service method which calls previews api and generates song goes here
     this.service.setArtistName(artistName);
-    this.setGameState('playing');
+    this.service.fetchArtist(artistName).subscribe(artists => {
+      if (artists && artists.length > 0) {
+        this.fetchSongsForArtist(artists[0].id);
+        this.setGameState('guessing');
+      } else {
+        // handle no artist found
+        alert("No artist found with that name. Please try another name.");
+      }
+    });
+  }
+
+  public submitGuess(userGuess: string) {
+    this.setGameState('guessed');
+    this.setUserGuess(userGuess);
+    this.verifyAnswer();
+  }
+
+  public fetchSongsForArtist(artistID: number) {
+    this.service.fetchSongs(artistID).subscribe(songs => {
+      if (songs && songs.length > 0) {
+        this.playSong(songs[0]);
+      } else {
+        alert("No soungs found for this artist.");
+      }
+    })
+  }
+
+  public playSong(song: any) {
+    this.service.setSongURL(song.link);
+    this.service.setSongName(song.name);
+  }
+
+  public verifyAnswer() {
+    if (this.userGuess.toLowerCase() === this.service.getSongName().toLowerCase()) {
+      this.service.setScore(this.service.getScore() + 1);
+      // this.fetchSongsForArtist(this.service.getArtistName())
+    } else {
+      this.endGame();
+    }
+    this.userGuess = ''; // Clear the input after the guess;
+  }
+
+  public endGame() {
+    alert('Game Over! Your final score is ...');
+    this.service.updateScore(this.service.getUsername(), {
+      score: this.service.getScore()
+    }).subscribe();
   }
 
   public getArtistName() {
@@ -34,4 +82,15 @@ export class GameViewComponent {
     this.gameState = gameState;
   }
 
+  public checkSongName(songNameInput: string) {
+    this.service.checkSongName(songNameInput);
+  }
+
+  public setUserGuess(userGuess: string) {
+    this.userGuess = userGuess;
+  }
+
+  public getUserGuess() {
+    return this.userGuess;
+  }
 }

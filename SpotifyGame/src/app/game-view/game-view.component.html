@@ -7,12 +7,20 @@
         <button (click)="generateSong(artistName.value)">Generate Song</button>
     </div>
 </div>
-<div *ngIf="getGameState() === 'playing'">
+<div *ngIf="getGameState() === 'guessing'">
     <h1>Currently Playing: {{getArtistName()}}</h1>
     <h2>Press play and guess the following song: </h2>
     <audio controls src="https://p.scdn.co/mp3-preview/0a69f787920bde0a0e1d17af762695ad3cc9d99b?cid=acaeb65eed5644c798b3ae8a3ef7cde2"></audio>
 </div>
-<div class="input" *ngIf="getGameState() === 'playing'">
-    <label>What song is this? </label>
-    <input #songName type="text" />
+<div *ngIf="getGameState() === 'guessing'">
+    <div class="input">
+        <label>What song is this? </label>
+        <input #songName type="text" />
+    </div>
+    <div class="submit">
+        <button (click)="submitGuess(songName.value)">Submit Guess</button>
+    </div>
+</div>
+<div *ngIf="getGameState() === 'guessed'">
+    <h1>Guessed</h1>
 </div>

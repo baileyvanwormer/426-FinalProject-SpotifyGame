@@ -9,17 +9,12 @@ import { GameService } from '../game.service';
 export class LoginViewComponent {
   constructor(private service: GameService) {}
 
-  public handleSubmit(username: string, password: string) {
+  public handleSubmit(username: string) {
     this.service.setUsername(username);
-    this.service.setPassword(password);
     this.service.setState('menu');
   }
 
   public getUsername() {
     return this.service.getUsername();
-  }
-
-  public getPassword() {
-    return this.service.getPassword();
   }
 }

@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-
+import {User} from "./User.mjs"
 
 const CLIENT_ID = "acaeb65eed5644c798b3ae8a3ef7cde2";
 const CLIENT_SECRET = "c8668ba1c0744c0c8857089d1d6bf6d2";
@@ -19,6 +19,20 @@ async function postData(url = "", data = {}) {
     });
     return response.json(); 
 }
+
+async function getData(url = "", data = {}) {   
+    const response = await fetch(url, {
+        method: "GET", 
+        mode: "cors", 
+        cache: "no-cache", 
+        headers: {
+            "Content-Type": 'application/x-www-form-urlencoded',
+            "Authorization": 'Bearer ' + token
+        },
+        referrerPolicy: "no-referrer",
+    });
+    return response.json(); 
+}
   
 postData('https://accounts.spotify.com/api/token').then((data) => {
     console.log(data); 
@@ -33,25 +47,37 @@ app.use(bodyParser.json());
 
 //get info about a user
 app.get('/user/:name', (req, res) => {
-    let user = {username:"test", scores: [{song: {name: "song1", id:12345}, points: [1,2,3,4]}]}
-    res.json(user);
+    let name = req.params.name;
+    let user = {};
+    if(!User.users.map((user) => user.getName()).includes(name)){
+        res.status(404).send("user not found");
+        return
+    }
+    user = User.users.find((user) => user.getName() === name);
+    res.json({username: user.getName(), scores: user.getScores()});
 });
 
 //create a new user
 app.post('/user', (req, res) => {
-    let user = {username:"test", scores: [{song: {name: "song1", id:12345}, points: [1,2,3,4]}]}
-    res.json(user);
+    try{
+        let user = new User(req.body.username, req.body.scores);
+        res.json({username: user.getName(), scores: user.getScores()});
+    }
+    catch(e) {
+        console.log(e);
+        res.status(400).send("invalid data");
+    }
 });
 
 //update a user
 app.put('/user/:name', (req, res) => {
-    let user = {username:"test", scores: [{song: {name: "song1", id:12345}, points: [1,2,3,4]}]}
+    let user = {username:"test", scores: [{artist: {artist: "artist1", id:12345}, points: [1,2,3,4]}]}
     res.json(user);
 });
 
 //get a list of artist ids in the form {name: <name>, id:<id>}
 app.get('/artist/:name', (req, res) => {
-    let artists = [{name: artist1, id:12345}, {name:artist2, id:54321}];
+    let artists = [{name: "artist1", id:12345}, {name:"artist2", id:54321}];
     res.json(artists);
 });
 

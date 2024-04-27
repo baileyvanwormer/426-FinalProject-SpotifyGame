@@ -17,8 +17,4 @@ export class MenuViewComponent {
   public getUsername() {
     return this.service.getUsername();
   }
-
-  public getPassword() {
-    return this.service.getPassword();
-  }
 }

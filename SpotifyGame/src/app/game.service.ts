@@ -7,7 +7,6 @@ import { Injectable } from '@angular/core';
 export class GameService {
 
   private username: string = "";
-  private password: string = "";
   private state: string = "login";
   private artistName: string = "Bailey Van Wormer";
 
@@ -21,10 +20,6 @@ export class GameService {
     return this.username;
   }
 
-  public getPassword() {
-    return this.password;
-  }
-
   public getState() {
     return this.state;
   }
@@ -35,10 +30,6 @@ export class GameService {
 
   public setUsername(username: string) {
     this.username = username;
-  }
-
-  public setPassword(password: string) {
-    this.password = password;
   }
 
   public setState(state: string) {

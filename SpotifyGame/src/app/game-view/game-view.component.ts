@@ -52,6 +52,8 @@ export class GameViewComponent {
   public verifyAnswer() {
     if (this.userGuess.toLowerCase() === this.service.getSongName().toLowerCase()) {
       this.service.setScore(this.service.getScore() + 1);
+      this.generateSong(this.service.getArtistName());
+      this.setGameState('guessing');
       // this.fetchSongsForArtist(this.service.getArtistName())
     } else {
       this.endGame();
@@ -60,6 +62,7 @@ export class GameViewComponent {
   }
 
   public endGame() {
+    this.setGameState('end');
     alert('Game Over! Your final score is ...');
     this.service.updateScore(this.service.getUsername(), {
       score: this.service.getScore()
@@ -92,5 +95,9 @@ export class GameViewComponent {
 
   public getUserGuess() {
     return this.userGuess;
+  }
+
+  public getScore() {
+    return this.service.getScore();
   }
 }

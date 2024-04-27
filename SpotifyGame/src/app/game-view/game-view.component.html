@@ -1,7 +1,18 @@
-<div class="input">
-    <label>Please Enter an Artist Name: </label>
-    <input #artistName type="text"/>
+<div *ngIf="getGameState() === 'initial'">
+    <div class="input">
+        <label>Please Enter an Artist Name: </label>
+        <input #artistName type="text"/>
+    </div>
+    <div class="submit">
+        <button (click)="generateSong(artistName.value)">Generate Song</button>
+    </div>
 </div>
-<div>
-    <button (click)="setArtistName(artistName.value); generateSong();">Generate Song</button>
+<div *ngIf="getGameState() === 'playing'">
+    <h1>Currently Playing: {{getArtistName()}}</h1>
+    <h2>Press play and guess the following song: </h2>
+    <audio controls src="https://p.scdn.co/mp3-preview/0a69f787920bde0a0e1d17af762695ad3cc9d99b?cid=acaeb65eed5644c798b3ae8a3ef7cde2"></audio>
+</div>
+<div class="input" *ngIf="getGameState() === 'playing'">
+    <label>What song is this? </label>
+    <input #songName type="text" />
 </div>

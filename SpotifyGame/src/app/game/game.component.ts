@@ -9,43 +9,62 @@ import { GameService } from '../game.service';
 export class GameComponent {
   currentScore = 0;
   currentSongPreviewUrl = '';
-  currentArtistId = '';
+  currentSongTitle = '';
+  userGuess = '';
   isGameActive = false;
 
   constructor(private gameService: GameService) {}
 
+  // Start the game by fetching an artist and their songs
   startGame(artistName: string) {
+    this.isGameActive = true;
+    this.currentScore = 0;
     this.gameService.setArtistName(artistName);
-    this.gameService.fetchArtist(artistName).subscribe(artist => {
-      if (artist && artist.length > 0) {
-        this.currentArtistId = artist[0].id;
-        this.isGameActive = true;
-        this.playNextSong();
+    this.gameService.fetchArtist(artistName).subscribe(artists => {
+      if (artists && artists.length > 0) {
+        this.fetchSongsForArtist(artists[0].id);
+      } else {
+        // Handle no artist found
+        this.isGameActive = false;
+        alert("No artist found with that name. Please try another artist.");
       }
     });
   }
 
-  playNextSong() {
-    this.gameService.fetchSongs(this.currentArtistId).subscribe(songs => {
+  // Fetch songs for a given artist ID
+  fetchSongsForArtist(artistId: string) {
+    this.gameService.fetchSongs(artistId).subscribe(songs => {
       if (songs && songs.length > 0) {
-        this.currentSongPreviewUrl = songs[0].link; // Load the first song
-        // Additional logic to play the song if needed
+        this.playSong(songs[0]);
+      } else {
+        // Handle no songs found
+        this.isGameActive = false;
+        alert("No songs found for this artist.");
       }
     });
   }
 
-  verifyAnswer(userGuess: string, correctTitle: string) {
-    if (userGuess === correctTitle) {
+  // Play a song
+  playSong(song: any) {
+    this.currentSongPreviewUrl = song.link;
+    this.currentSongTitle = song.name;
+  }
+
+  // Verify the user's guess
+  verifyAnswer() {
+    if (this.userGuess.toLowerCase() === this.currentSongTitle.toLowerCase()) {
       this.currentScore++;
-      this.playNextSong();
+      this.fetchSongsForArtist(this.gameService.getArtistName());
     } else {
       this.endGame();
     }
+    this.userGuess = '';  // Clear the input after the guess
   }
 
   endGame() {
     this.isGameActive = false;
-    // Logic to handle the end of the game, show final score, update user data
+    alert(`Game Over! Your final score is ${this.currentScore}`);
+    // Optionally update the score to the backend here
     this.gameService.updateScore(this.gameService.getUsername(), { score: this.currentScore }).subscribe();
   }
 }

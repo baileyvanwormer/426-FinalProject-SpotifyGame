@@ -1,8 +1,13 @@
 <div *ngIf="isGameActive">
     <h2>Current Score: {{ currentScore }}</h2>
-    <audio [src]="currentSongPreviewUrl" controls></audio>
-    <input type="text" [(ngModel)]="userGuess" placeholder="Enter song title">
-    <button (click)="verifyAnswer(userGuess, currentSongTitle)">Guess</button>
+    <audio [src]="currentSongPreviewUrl" controls autoplay></audio>
+    <input type="text" [(ngModel)]="userGuess" placeholder="Guess the song title">
+    <button (click)="verifyAnswer()">Guess</button>
+    <button (click)="endGame()">End Game</button>
   </div>
-  <button *ngIf="!isGameActive" (click)="startGame('Artist Name')">Start Game</button>
+  
+  <div *ngIf="!isGameActive">
+    <input type="text" [(ngModel)]="artistName" placeholder="Enter artist name">
+    <button (click)="startGame(artistName)">Start Game</button>
+  </div>
   

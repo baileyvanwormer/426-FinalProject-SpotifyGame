@@ -9,6 +9,11 @@ export class GameService {
   private username: string = '';
   private state: string = 'login';
   private artistName: string = '';
+  private artistID: number = 0;
+  private songName: string = '';
+  private score: number = 0;
+  private songURL: string = '';
+  
 
   constructor(private http: HttpClient) { }
 
@@ -16,7 +21,7 @@ export class GameService {
     return this.http.get(`/artist/${artistName}`);
   }
 
-  public fetchSongs(artistId: string): Observable<any> {
+  public fetchSongs(artistId: number): Observable<any> {
     return this.http.get(`/artist/songs/${artistId}`);
   }
 
@@ -47,4 +52,44 @@ export class GameService {
   public getArtistName() {
     return this.artistName;
   }
+
+  public getSongName() {
+    return this.songName;
+  }
+
+  public setSongName(songName: string) {
+    this.songName = songName;
+  }
+
+  public checkSongName(songNameInput: string) {
+    if (this.songName == songNameInput) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public getScore() {
+    return this.score;
+  }
+
+  public setScore(score: number) {
+    this.score = score;
+  }
+
+  public getArtistID() {
+    return this.artistID;
+  }
+
+  public setArtistID(id: number) {
+    this.artistID = id;
+  }
+
+  public getSongURL() {
+    return this.songURL;
+  }
+
+  public setSongURL(url: string) {
+    this.songURL = url;
+  } 
 }

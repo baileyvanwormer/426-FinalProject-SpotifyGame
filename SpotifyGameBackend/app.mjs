@@ -103,16 +103,25 @@ app.get('/artist/songs/:id', (req, res) => {
         res.status(400).send("no id found");
         return;
     }
-    getData("https://api.spotify.com/v1/artists/"+id+"/top-tracks").then((data) => {
+    getData("https://api.spotify.com/v1/artists/"+id+"/albums").then((data) => {
         if(data.error){
             res.status(404).send("artist with id not found");
             return;
         }
         let links = [];
-        res.json(artists);
+        let album_ids = data.items.map((item) => item.id);
+        album_ids = album_ids.slice(0,20);
+        let ids_string = album_ids.join(",");
+        getData("https://api.spotify.com/v1/albums?ids="+ ids_string).then((album_data) => {
+            album_data.albums.forEach((album) => {
+                album.tracks.items.forEach((track) => {
+                    links.push({name: track.name, link:track.preview_url});
+                })
+            }); 
+            links = links.filter((link) => link.link !== null);
+            res.json(links);
+        })
     });
-    let links = [{name: "testsong1", link: 'https://p.scdn.co/mp3-preview/0a69f787920bde0a0e1d17af762695ad3cc9d99b?cid=acaeb65eed5644c798b3ae8a3ef7cde2'}];
-    res.json(links);
 });
 
 app.get('/songs/:id', (req, res) => {

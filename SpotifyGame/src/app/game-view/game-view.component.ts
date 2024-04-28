@@ -17,15 +17,21 @@ export class GameViewComponent {
   public generateSong(artistName: string) {
     // logic to call service method which calls previews api and generates song goes here
     this.service.setArtistName(artistName);
-    this.service.fetchArtist(artistName).subscribe(artists => {
-      if (artists && artists.length > 0) {
-        this.fetchSongsForArtist(artists[0].id);
-        this.setGameState('guessing');
-      } else {
-        // handle no artist found
-        alert("No artist found with that name. Please try another name.");
-      }
-    });
+    alert("generate song pressed ");
+    this.setGameState('guessing');
+    try {
+      this.service.fetchArtist(artistName).subscribe(artists => {
+        if (artists && artists.length > 0) {
+          this.fetchSongsForArtist(artists[0].id);
+          this.setGameState('guessing');
+        } else {
+          // handle no artist found
+          alert("No artist found with that name. Please try another name.");
+        }
+      });
+    } catch (error) {
+      alert("No artist found with that name. Please try another name.");
+    }
   }
 
   public submitGuess(userGuess: string) {
@@ -52,6 +58,7 @@ export class GameViewComponent {
   public verifyAnswer() {
     if (this.userGuess.toLowerCase() === this.service.getSongName().toLowerCase()) {
       this.service.setScore(this.service.getScore() + 1);
+      alert("Correct! Maybe show score here..., Next song!");
       this.generateSong(this.service.getArtistName());
       this.setGameState('guessing');
       // this.fetchSongsForArtist(this.service.getArtistName())

@@ -45,13 +45,18 @@ const port = 3000;
 
 app.use(bodyParser.json());
 
+app.get('/users', (req, res) => {
+    let user_names = User.users.map((user) => user.getName());
+    res.json(user_names);
+});
+
 //get info about a user
 app.get('/user/:name', (req, res) => {
     let name = req.params.name;
     let user = {};
     if(!User.users.map((user) => user.getName()).includes(name)){
         res.status(404).send("user not found");
-        return
+        return;
     }
     user = User.users.find((user) => user.getName() === name);
     res.json({username: user.getName(), scores: user.getScores()});
@@ -77,16 +82,38 @@ app.put('/user/:name', (req, res) => {
 
 //get a list of artist ids in the form {name: <name>, id:<id>}
 app.get('/artist/:name', (req, res) => {
-    let artists = [{name: "artist1", id:12345}, {name:"artist2", id:54321}];
-    res.json(artists);
+    let name = req.params.name;
+    if(!name) {
+        res.status(400).send("no name found");
+        return;
+    }
+    name = name.trim();
+    getData("https://api.spotify.com/v1/search?q="+ name +"&type=artist").then((data) => {
+        let artists = data.artists.items.map((item) => {
+           return{name: item.name, id: item.id};
+        })
+        res.json(artists);
+    });
 });
 
 //get a list of mp3s for an artist id
 app.get('/artist/songs/:id', (req, res) => {
+    let id = req.params.id;
+    if(!id) {
+        res.status(400).send("no id found");
+        return;
+    }
+    getData("https://api.spotify.com/v1/artists/"+id+"/top-tracks").then((data) => {
+        if(data.error){
+            res.status(404).send("artist with id not found");
+            return;
+        }
+        let links = [];
+        res.json(artists);
+    });
     let links = [{name: "testsong1", link: 'https://p.scdn.co/mp3-preview/0a69f787920bde0a0e1d17af762695ad3cc9d99b?cid=acaeb65eed5644c798b3ae8a3ef7cde2'}];
     res.json(links);
 });
-
 
 app.get('/songs/:id', (req, res) => {
     res.status(500).send("still needs to be implemented");

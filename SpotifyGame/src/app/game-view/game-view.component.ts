@@ -49,7 +49,9 @@ export class GameViewComponent {
 
   public playSong(song: any) {
     this.service.setSongURL(song.link);
-    this.service.setSongName(song.name);
+    this.setSongName(song.name);
+    console.log(song.name);
+    console.log(this.getSongName());
   }
 
   public verifyAnswer() {
@@ -62,6 +64,7 @@ export class GameViewComponent {
     } else {
       this.endGame();
     }
+    console.log("making user guess empty");
     this.setUserGuess(''); // Clear the input after the guess;
   }
 
@@ -116,10 +119,18 @@ export class GameViewComponent {
   }
 
   public setSongURL(url: string) {
-    return this.service.setSongURL(url);
+    this.service.setSongURL(url);
   }
 
   public setScore(score: number) {
     this.service.setScore(score);
+  }
+
+  public setSongName(songName: string) {
+    this.service.setSongName(songName);
+  }
+
+  public getSongName() {
+    return this.service.getSongName();
   }
 }

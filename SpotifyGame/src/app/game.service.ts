@@ -53,12 +53,13 @@ export class GameService {
     return this.artistName;
   }
 
-  public getSongName() {
-    return this.songName;
-  }
-
   public setSongName(songName: string) {
     this.songName = songName;
+    console.log(this.songName);
+  }
+
+  public getSongName() {
+    return this.songName;
   }
 
   public checkSongName(songNameInput: string) {

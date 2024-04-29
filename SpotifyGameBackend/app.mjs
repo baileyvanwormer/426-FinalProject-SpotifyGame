@@ -81,8 +81,26 @@ app.post('/user', (req, res) => {
 
 //update a user
 app.put('/user/:name', (req, res) => {
-    let user = {username:"test", scores: [{artist: {artist: "artist1", id:12345}, points: [1,2,3,4]}]}
-    res.json(user);
+    let name = req.params.name;
+    let user = {};
+    if(!User.users.map((user) => user.getName()).includes(name)){
+        res.status(404).send("user not found");
+        return;
+    }
+    let scores = req.body.scores;
+    if(!scores) {
+        res.status(400).send("scores not found in request body");
+        return;
+    }
+    try {
+        user = User.users.find((user) => user.getName() === name);
+        user.addScores(scores);
+        res.json({username: user.getName(), scores: user.getScores()});
+    }
+    catch(e) {
+        console.log(e);
+        res.status(400).send("scores formatted incorrectly");
+    }
 });
 
 //get a list of artist ids in the form {name: <name>, id:<id>}
@@ -127,10 +145,6 @@ app.get('/artist/songs/:id', (req, res) => {
             res.json(links);
         })
     });
-});
-
-app.get('/songs/:id', (req, res) => {
-    res.status(500).send("still needs to be implemented");
 });
 
 app.listen(port, () => {

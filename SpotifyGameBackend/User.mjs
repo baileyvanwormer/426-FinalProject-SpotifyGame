@@ -11,10 +11,21 @@ export class User {
     getScores() {
         return this.#scores.map((score) => score);
     }
+
     addScores(scores) {
-        if(!this.scoresValid(scores))
+        if(!User.scoresValid(scores))
             throw new Error("scores are not valid");
-        scores.forEach((score) => this.#scores.push(score));
+        scores.forEach((score) => {
+            let currentArtists = this.#scores.map((score) => score.artist.id);
+            let newArtist = score.artist.id;
+            if(currentArtists.includes(newArtist)){
+                let scoreToUpdate = this.#scores.find((score) => score.artist.id === newArtist)
+                score.points.forEach((point) => scoreToUpdate.points.push(point));
+            }
+            else {
+                this.#scores.push(score);
+            }
+        });
     }
 
     static scoresValid(scores) {

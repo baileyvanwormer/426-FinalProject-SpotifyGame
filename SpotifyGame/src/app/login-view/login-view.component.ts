@@ -11,6 +11,8 @@ export class LoginViewComponent {
 
   public handleSubmit(username: string) {
     this.service.setUsername(username);
+    this.service.createUser(username).subscribe();
+    console.log("created user");
     this.service.setState('menu');
   }
 

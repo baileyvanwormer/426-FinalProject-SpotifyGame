@@ -70,9 +70,19 @@ export class GameViewComponent {
 
   public endGame() {
     this.setGameState('end');
-    this.service.updateScore(this.service.getUsername(), {
-      score: this.service.getScore()
-    }).subscribe();
+    this.service.updateScore(this.service.getUsername(), this.service.getScore()).subscribe();
+  }
+
+  public getHighestScore() {
+    this.service.fetchUser(this.getUsername()).subscribe( user => {
+      let points = user.scores.find((score: any)=> score.artist.id === this.service.getArtistID());
+      if (!points)
+        return this.service.getScore();
+      else
+        return Math.max(...points);
+    }
+
+    )
   }
 
   public backToMenu() {
@@ -132,5 +142,9 @@ export class GameViewComponent {
 
   public getSongName() {
     return this.service.getSongName();
+  }
+
+  public getUsername() {
+    return this.service.getUsername();
   }
 }

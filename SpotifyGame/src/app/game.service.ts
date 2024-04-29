@@ -18,15 +18,15 @@ export class GameService {
   constructor(private http: HttpClient) { }
 
   public fetchArtist(artistName: string): Observable<any> {
-    return this.http.get(`/artist/${artistName}`);
+    return this.http.get(`http://localhost:3000/artist/${artistName}`);
   }
 
   public fetchSongs(artistId: number): Observable<any> {
-    return this.http.get(`/artist/songs/${artistId}`);
+    return this.http.get(`http://localhost:3000/artist/songs/${artistId}`);
   }
 
   public updateScore(username: string, score: any): Observable<any> {
-    return this.http.put(`/user/${username}`, score);
+    return this.http.put(`http://ocalhost:3000/user/${username}`, score);
   }
 
   public setUsername(username: string) {

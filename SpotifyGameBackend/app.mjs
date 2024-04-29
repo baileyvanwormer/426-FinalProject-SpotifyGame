@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import {User} from "./User.mjs"
+import cors from 'cors';
 
 const CLIENT_ID = "acaeb65eed5644c798b3ae8a3ef7cde2";
 const CLIENT_SECRET = "c8668ba1c0744c0c8857089d1d6bf6d2";
@@ -13,6 +14,7 @@ async function postData(url = "", data = {}) {
         cache: "no-cache", 
         headers: {
             "Content-Type": 'application/x-www-form-urlencoded',
+            "Access-Control-Allow-Origin": '*'
         },
         referrerPolicy: "no-referrer", 
         body: "grant_type=client_credentials&client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET
@@ -27,7 +29,8 @@ async function getData(url = "", data = {}) {
         cache: "no-cache", 
         headers: {
             "Content-Type": 'application/x-www-form-urlencoded',
-            "Authorization": 'Bearer ' + token
+            "Authorization": 'Bearer ' + token,
+            "Access-Control-Allow-Origin": '*'
         },
         referrerPolicy: "no-referrer",
     });
@@ -40,6 +43,8 @@ postData('https://accounts.spotify.com/api/token').then((data) => {
 });
 
 const app = express();
+
+app.use(cors({ origin: 'http://localhost:4200' , credentials :  true}));
 
 const port = 3000;
 

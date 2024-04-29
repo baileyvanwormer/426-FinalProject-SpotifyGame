@@ -21,8 +21,10 @@ export class GameViewComponent {
     this.setGameState('guessing');
     try {
       this.service.fetchArtist(artistName).subscribe(artists => {
+        console.log(artists);
         if (artists && artists.length > 0) {
           this.fetchSongsForArtist(artists[0].id);
+          this.setArtistName(artists[0].name);
           this.setGameState('guessing');
         } else {
           // handle no artist found
@@ -42,6 +44,7 @@ export class GameViewComponent {
 
   public fetchSongsForArtist(artistID: number) {
     this.service.fetchSongs(artistID).subscribe(songs => {
+      console.log(songs);
       if (songs && songs.length > 0) {
         this.playSong(songs[0]);
       } else {

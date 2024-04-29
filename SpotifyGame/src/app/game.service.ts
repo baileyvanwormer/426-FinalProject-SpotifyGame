@@ -13,9 +13,11 @@ export class GameService {
   private songName: string = '';
   private score: number = 0;
   private songURL: string = '';
-  
+  private users: Map<string, number>;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { 
+    this.users = new Map<string, number>();
+  }
 
   public fetchArtist(artistName: string): Observable<any> {
     return this.http.get(`http://localhost:3000/artist/${artistName}`);
@@ -92,5 +94,21 @@ export class GameService {
 
   public setSongURL(url: string) {
     this.songURL = url;
-  } 
+  }
+
+  public getUsers() {
+    return this.users;
+  }
+
+  public getUserScore(username: string) {
+    return this.users.get(username);
+  }
+
+  public addUser(username: string) {
+    this.users.set(username, 0);
+  }
+
+  public updateUserScore(username: string, score: number) {
+    this.users.set(username, score);
+  }
 }

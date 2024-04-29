@@ -133,4 +133,20 @@ export class GameViewComponent {
   public getSongName() {
     return this.service.getSongName();
   }
+
+  public getUsers() {
+    return this.service.getUsers();
+  }
+
+  public getUserScore(username: string) {
+    return this.service.getUserScore(username);
+  }
+
+  public addUser(username: string) {
+    this.service.addUser(username);
+  }
+
+  public updateUserScore(username: string, score: number) {
+    this.service.updateUserScore(username, score);
+  }
 }

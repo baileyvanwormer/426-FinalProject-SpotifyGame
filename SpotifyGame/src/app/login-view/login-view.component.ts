@@ -17,4 +17,12 @@ export class LoginViewComponent {
   public getUsername() {
     return this.service.getUsername();
   }
+
+  public getUsers() {
+    return this.service.getUsers();
+  }
+
+  public addUser(username: string) {
+    this.service.addUser(username);
+  }
 }

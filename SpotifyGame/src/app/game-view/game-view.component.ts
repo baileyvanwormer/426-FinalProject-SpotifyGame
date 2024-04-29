@@ -10,30 +10,24 @@ export class GameViewComponent {
 
   private gameState: string = "initial";
   private userGuess: string = '';
-  private gameOver: boolean = false;
+  private i: number = 0;
 
   constructor(private service: GameService) {}
 
   public generateSong(artistName: string) {
     // logic to call service method which calls previews api and generates song goes here
     this.service.setArtistName(artistName);
-    alert("generate song pressed ");
-    this.setGameState('guessing');
-    try {
-      this.service.fetchArtist(artistName).subscribe(artists => {
-        console.log(artists);
-        if (artists && artists.length > 0) {
-          this.fetchSongsForArtist(artists[0].id);
-          this.setArtistName(artists[0].name);
-          this.setGameState('guessing');
-        } else {
-          // handle no artist found
-          alert("No artist found with that name. Please try another name.");
-        }
-      });
-    } catch (error) {
-      alert("No artist found with that name. Please try another name.");
-    }
+    this.service.fetchArtist(artistName).subscribe(artists => {
+      console.log(artists);
+      if (artists && artists.length > 0) {
+        this.fetchSongsForArtist(artists[0].id);
+        this.setArtistName(artists[0].name);
+        this.setGameState('guessing');
+      } else {
+        // handle no artist found
+        alert("No artist found with that name. Please check your spelling or try another name.");
+      }
+    });
   }
 
   public submitGuess(userGuess: string) {
@@ -46,7 +40,7 @@ export class GameViewComponent {
     this.service.fetchSongs(artistID).subscribe(songs => {
       console.log(songs);
       if (songs && songs.length > 0) {
-        this.playSong(songs[0]);
+        this.playSong(songs[this.i]);
       } else {
         alert("No soungs found for this artist.");
       }
@@ -60,23 +54,29 @@ export class GameViewComponent {
 
   public verifyAnswer() {
     if (this.userGuess.toLowerCase() === this.service.getSongName().toLowerCase()) {
-      this.service.setScore(this.service.getScore() + 1);
-      alert("Correct! Maybe show score here..., Next song!");
-      this.generateSong(this.service.getArtistName());
+      this.setScore(this.getScore() + 1);
+      alert("Correct! Your score is: " + this.getScore() + ". Next song!");
+      this.i += 1;
+      this.generateSong(this.getArtistName());
       this.setGameState('guessing');
-      // this.fetchSongsForArtist(this.service.getArtistName())
     } else {
       this.endGame();
     }
-    this.userGuess = ''; // Clear the input after the guess;
+    this.setUserGuess(''); // Clear the input after the guess;
   }
 
   public endGame() {
     this.setGameState('end');
-    alert('Game Over! Your final score is ...');
     this.service.updateScore(this.service.getUsername(), {
       score: this.service.getScore()
     }).subscribe();
+  }
+
+  public backToMenu() {
+    this.setGameState('initial');
+    this.service.setState('menu');
+    this.i = 0;
+    this.setScore(0);
   }
 
   public getArtistName() {
@@ -109,5 +109,17 @@ export class GameViewComponent {
 
   public getScore() {
     return this.service.getScore();
+  }
+
+  public getSongURL() {
+    return this.service.getSongURL();
+  }
+
+  public setSongURL(url: string) {
+    return this.service.setSongURL(url);
+  }
+
+  public setScore(score: number) {
+    this.service.setScore(score);
   }
 }

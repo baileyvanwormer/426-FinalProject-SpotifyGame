@@ -18,3 +18,4 @@ How to play the game:
 6. Enjoy!
 
 Here is what our alert looks like that is not displaying in the video:
+<img width="1476" alt="Screenshot 2024-04-30 at 4 56 44 PM" src="https://github.com/baileyvanwormer/426-FinalProject-SpotifyGame/assets/89269750/5901b53a-ac29-411c-86bf-3e594665380b">

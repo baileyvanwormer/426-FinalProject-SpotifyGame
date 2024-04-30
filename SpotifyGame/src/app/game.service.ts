@@ -9,7 +9,7 @@ export class GameService {
   private username: string = '';
   private state: string = 'login';
   private artistName: string = '';
-  private artistID: number = 0;
+  private artistID: string = '';
   private songName: string = '';
   private score: number = 0;
   private songURL: string = '';
@@ -90,7 +90,7 @@ export class GameService {
     return this.artistID;
   }
 
-  public setArtistID(id: number) {
+  public setArtistID(id: string) {
     this.artistID = id;
   }
 

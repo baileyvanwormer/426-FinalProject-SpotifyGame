@@ -11,7 +11,12 @@ export class LoginViewComponent {
 
   public handleSubmit(username: string) {
     this.service.setUsername(username);
-    this.service.createUser(username).subscribe();
+
+    try {
+      this.service.createUser(username).subscribe();
+    } catch (error) {
+      // do nothing
+    }
     console.log("created user");
     this.service.setState('menu');
   }

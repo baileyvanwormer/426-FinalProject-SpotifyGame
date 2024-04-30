@@ -27,7 +27,8 @@
 <div *ngIf="getGameState() === 'end'">
     <h1>Game Over</h1>
     <h2>The song name was: "{{getSongName()}}"</h2>
-    <h2>Your score was {{getScore()}}</h2>
+    <h2>Your game score was {{getScore()}}</h2>
+    <h2>Your highest score is: {{getHighestScore()}}</h2>
     <div class="input">
         <button (click)="backToMenu()">Back To Menu</button>
     </div>

@@ -11,6 +11,8 @@ export class GameViewComponent {
   private gameState: string = "initial";
   private userGuess: string = '';
   private i: number = 0;
+  private highScore: number = 0;
+  private songsLength: number = 0;
 
   constructor(private service: GameService) {}
 
@@ -18,8 +20,9 @@ export class GameViewComponent {
     // logic to call service method which calls previews api and generates song goes here
     this.service.setArtistName(artistName);
     this.service.fetchArtist(artistName).subscribe(artists => {
-      console.log(artists);
       if (artists && artists.length > 0) {
+        this.highScore = 0;
+        this.setArtistID(artists[0].id);
         this.fetchSongsForArtist(artists[0].id);
         this.setArtistName(artists[0].name);
         this.setGameState('guessing');
@@ -38,8 +41,8 @@ export class GameViewComponent {
 
   public fetchSongsForArtist(artistID: number) {
     this.service.fetchSongs(artistID).subscribe(songs => {
-      console.log(songs);
       if (songs && songs.length > 0) {
+        this.songsLength = songs.length;
         this.playSong(songs[this.i]);
       } else {
         alert("No soungs found for this artist.");
@@ -50,29 +53,37 @@ export class GameViewComponent {
   public playSong(song: any) {
     this.service.setSongURL(song.link);
     this.setSongName(song.name);
-    console.log(song.name);
-    console.log(this.getSongName());
   }
 
   public verifyAnswer() {
     if (this.userGuess.toLowerCase() === this.service.getSongName().toLowerCase()) {
       this.setScore(this.getScore() + 1);
       alert("Correct! Your score is: " + this.getScore() + ". Next song!");
-      this.i += 1;
+      this.i = Math.floor(Math.random() * this.songsLength)
       this.generateSong(this.getArtistName());
       this.setGameState('guessing');
     } else {
       this.endGame();
     }
-    console.log("making user guess empty");
     this.setUserGuess(''); // Clear the input after the guess;
   }
 
-  public endGame() {
+  public async endGame() {
     this.setGameState('end');
-    this.service.updateScore(this.service.getUsername(), {
-      score: this.service.getScore()
-    }).subscribe();
+    this.service.updateScore(this.service.getUsername(), this.service.getScore()).subscribe();
+    this.fetchHighestScore();
+  }
+
+  public fetchHighestScore() {
+    this.service.fetchUser(this.getUsername()).subscribe( user => {
+      let score = user.scores.find((score: any)=> score.artist.id === this.service.getArtistID());
+      if (score ===  undefined) {
+        this.highScore = this.service.getScore();
+      } else {
+        this.highScore = this.getScore() > Math.max(...score.points) ? this.getScore() : Math.max(...score.points);
+      }
+    }
+    )
   }
 
   public backToMenu() {
@@ -132,5 +143,21 @@ export class GameViewComponent {
 
   public getSongName() {
     return this.service.getSongName();
+  }
+
+  public getUsername() {
+    return this.service.getUsername();
+  }
+
+  public getHighestScore() {
+    return this.highScore;
+  }
+
+  public getArtistID() {
+    return this.service.getArtistID();
+  }
+
+  public setArtistID(id: string) {
+    this.service.setArtistID(id);
   }
 }

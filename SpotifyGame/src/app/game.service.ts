@@ -9,7 +9,7 @@ export class GameService {
   private username: string = '';
   private state: string = 'login';
   private artistName: string = '';
-  private artistID: number = 0;
+  private artistID: string = '';
   private songName: string = '';
   private score: number = 0;
   private songURL: string = '';
@@ -26,7 +26,15 @@ export class GameService {
   }
 
   public updateScore(username: string, score: any): Observable<any> {
-    return this.http.put(`http://ocalhost:3000/user/${username}`, score);
+    return this.http.put(`http://localhost:3000/user/${username}`, {scores: [{artist: {name:this.getArtistName(), id: this.getArtistID()}, points: [score]}]});
+  }
+
+  public createUser(username: string): Observable<any> {
+    return this.http.post(`http://localhost:3000/user`, {username: username, scores: []});
+  }
+
+  public fetchUser(username: string): Observable<any> {
+    return this.http.get(`http://localhost:3000/user/${username}`);
   }
 
   public setUsername(username: string) {
@@ -82,7 +90,7 @@ export class GameService {
     return this.artistID;
   }
 
-  public setArtistID(id: number) {
+  public setArtistID(id: string) {
     this.artistID = id;
   }
 

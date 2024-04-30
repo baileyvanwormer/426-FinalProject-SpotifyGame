@@ -6,3 +6,11 @@ div.input {
     padding: 10px;
 }
 
+audio {
+    background-color: #1DB954;
+    padding: 10px;
+}
+
+div.submit {
+    padding: 10px;
+}

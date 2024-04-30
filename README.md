@@ -1,5 +1,8 @@
 # Spotify Name That Tune Game
 
+## Link to Our Final Project Presentation Video
+https://youtu.be/QmriKZKhEF0
+
 ## Project Overview
 Spotify Name That Tune is a web-based game developed by Bailey Van Wormer (730472595), Brad Weyand (730318989), and Andrew Mu (730290106) where players listen to song previews and guess the song titles to earn points. This project was designed to integrate with the Spotify API to fetch song previews and artist data.
 
@@ -13,3 +16,5 @@ How to play the game:
 4. Click 'Submit Guess' to see if you got the correct answer!
 5. If you did, move back to step 3 and repeat! If you did not, you will be taken to a Game Over screen where your game score and highest score for that artist are displayed. You have the option to return back to the menu and select another artist to play again!
 6. Enjoy!
+
+Here is what our alert looks like that is not displaying in the video:

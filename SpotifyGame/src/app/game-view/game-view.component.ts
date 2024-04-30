@@ -44,6 +44,7 @@ export class GameViewComponent {
       if (songs && songs.length > 0) {
         this.songsLength = songs.length;
         this.playSong(songs[this.i]);
+        console.log(songs[this.i]);
       } else {
         alert("No soungs found for this artist.");
       }
